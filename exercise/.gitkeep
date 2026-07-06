@@ -1,0 +1,3 @@
+# The starter code goes in this folder.
+# Students rename the .js starter to .ts and compile with a bare `npx tsc`
+# (this folder has its own tsconfig.json with the strict course settings).

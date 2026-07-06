@@ -1,0 +1,16 @@
+# Dependencies and build output
+node_modules/
+dist/
+
+# Autograding test report (regenerated on every run)
+test-results/
+
+# Operating system noise
+.DS_Store
+
+# Logs
+*.log
+
+# Note for maintainers: do NOT ignore *.js globally. The session starters are
+# .js files that students rename to .ts and then compile back to .js, and both
+# belong in their forks.

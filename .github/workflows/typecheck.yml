@@ -1,0 +1,30 @@
+name: Type check
+
+# Fast per-push feedback: type-check the exercise under the course's strict
+# settings once the student has renamed the starter to .ts. Skips cleanly
+# before then, so an early push never fails.
+on: push
+
+jobs:
+    typecheck:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out the repository
+              uses: actions/checkout@v4
+
+            - name: Set up Node 22
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Type-check the exercise
+              run: |
+                  if ls exercise/*.ts >/dev/null 2>&1; then
+                    echo "Type-checking exercise/"
+                    (cd exercise && npx tsc)
+                  else
+                    echo "No TypeScript files in exercise/ yet, skipping"
+                  fi

@@ -1,0 +1,17 @@
+{
+    "name": "TypeScript exercise",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+    "postCreateCommand": "npm install",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "usernamehw.errorlens",
+                "yoavbls.pretty-ts-errors",
+                "eamodio.gitlens",
+                "GitHub.vscode-pull-request-github"
+            ]
+        }
+    }
+}

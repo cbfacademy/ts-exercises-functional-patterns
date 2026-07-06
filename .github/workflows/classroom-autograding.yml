@@ -1,0 +1,25 @@
+name: Classroom Autograding
+
+# Full grading pipeline for this exercise's student forks: run the Vitest
+# suite, score functionality from the results, run AI code-quality review,
+# update Airtable, and post feedback. The guard conditions live inside the
+# reusable workflow, so this caller stays minimal and is a no-op on the
+# template repo and on forks outside the classroom org.
+#
+# Unlike the Java template, the caller passes `toolchain: node` because the
+# shared reusable workflow defaults to Java.
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    autograding:
+        uses: cbfacademy/autograding-workflows/.github/workflows/classroom-autograding.yml@main
+        with:
+            toolchain: node
+            # Vitest writes JUnit XML here (see vitest.config.ts); the path is
+            # relative to the student repo root the reporter runs in.
+            test_report_glob: 'test-results/junit.xml'
+            reporter: jest-junit
+        secrets: inherit
