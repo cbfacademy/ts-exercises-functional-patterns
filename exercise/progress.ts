@@ -1,45 +1,53 @@
-// Session 4 integrated exercise starter.
-// Rename this file to progress.ts, then follow the README.
+// Session 4 reference solution: Functional patterns and narrowing.
 
-// The domain you are modelling:
-// - A learner has an id, a name, and an email.
-// - A module progress record has a title and a status, which is one of
-//   'not-started', 'in-progress', or 'completed'. An in-progress module
-//   also has a lastActivity date. A completed module also has a
-//   completedOn date. A not-started module has nothing extra.
-// - An enrolment links a learner to an array of module progress records.
-//
-// A couple of these functions contain runtime bugs that only become
-// obvious once the types are applied. The demo output below is wrong in
-// two places. The compiler will find both for you.
+interface Learner {
+    id: string;
+    name: string;
+    email: string;
+}
+
+type ModuleProgress =
+    | { title: string; status: 'not-started' }
+    | { title: string; status: 'in-progress'; lastActivity: Date }
+    | { title: string; status: 'completed'; completedOn: Date };
+
+interface Enrolment {
+    learner: Learner;
+    modules: ModuleProgress[];
+}
 
 // Returns only the completed modules for an enrolment.
-export function completedModules(enrolment) {
-    return enrolment.modules.filter((module) => module.status === 'complete');
+// Fixed: the starter filtered on 'complete' instead of 'completed'.
+export function completedModules(enrolment: Enrolment): ModuleProgress[] {
+    return enrolment.modules.filter((module) => module.status === 'completed');
 }
 
 // Returns a human-readable summary of an enrolment's progress.
-export function progressSummary(enrolment) {
+export function progressSummary(enrolment: Enrolment): string {
     const lines = enrolment.modules.map((module) => {
         switch (module.status) {
             case 'not-started':
                 return `- ${module.title}: not started`;
             case 'in-progress':
-                return `- ${module.title}: in progress, last activity ${module.lastActivity}`;
+                return `- ${module.title}: in progress, last activity ${module.lastActivity.toDateString()}`;
             case 'completed':
-                return `- ${module.title}: completed on ${module.lastActivity}`;
+                // Fixed: the starter read `lastActivity` (undefined here) instead of `completedOn`.
+                return `- ${module.title}: completed on ${module.completedOn.toDateString()}`;
         }
     });
     return `Progress for ${enrolment.learner.name}:\n${lines.join('\n')}`;
 }
 
 // Finds the enrolment for the learner with the given id.
-export function findLearner(enrolments, id) {
+export function findLearner(
+    enrolments: Enrolment[],
+    id: string,
+): Enrolment | undefined {
     return enrolments.find((enrolment) => enrolment.learner.id === id);
 }
 
 // Try it: compile with `npx tsc`, then run `node progress.js`.
-const enrolments = [
+const enrolments: Enrolment[] = [
     {
         learner: {
             id: 'L001',
