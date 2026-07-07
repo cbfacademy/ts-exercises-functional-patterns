@@ -1,3 +1,0 @@
-# The unit tests go in this folder, named <name>.test.ts.
-# Import the code under test from ../exercise/<file>. Vitest runs these from
-# the repository root via `npm test`.

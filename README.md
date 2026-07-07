@@ -1,50 +1,55 @@
-# TypeScript Exercise Template
+# Session 4: Functional patterns and narrowing
 
-This template repository is used to create autograded **TypeScript** exercise repositories for CBF Academy bootcamps. It includes a GitHub Classroom autograding workflow that scores student submissions on **functionality** and **code quality** by executing unit tests (Vitest) and submitting the code changes for review by an automated agent.
+**What you are practising:** discriminated unions, narrowing, immutability, and `map`/`filter`/`reduce`, pulled together in one integrated exercise.
 
-Use this template for plain-TypeScript exercises (`ts-exercises-<name>`). For React exercises, use the `ts-react-exercise-template` instead.
+## Setup
 
-## What's in here
+Accept the assignment, clone **your** repository, then install the tooling once:
 
-| Path                                          | Purpose                                                                     |
-| --------------------------------------------- | --------------------------------------------------------------------------- |
-| `exercise/`                                   | Where the starter code lives. Has its own strict `tsconfig.json`.           |
-| `tests/`                                      | Where the autograding unit tests live (`<name>.test.ts`).                   |
-| `vitest.config.ts`                            | Runs `tests/**` and writes JUnit XML to `test-results/junit.xml`.           |
-| `.github/workflows/classroom-autograding.yml` | Calls the shared reusable workflow with `toolchain: node`.                  |
-| `.github/workflows/typecheck.yml`             | Fast `npx tsc` feedback on every push once the starter is renamed to `.ts`. |
-| `package.json`                                | Shared tooling: Vitest, TypeScript, ESLint, Prettier.                       |
+```bash
+npm install
+```
 
-## Usage
+## The workflow
 
-1. Create a new repository from this template:
-    - **Template:** select this repository
-    - **Name:** use the `ts-exercises-<exercise name>` convention, e.g. `ts-exercises-core-types`
-    - **Visibility:** Public (needed for Classroom)
-2. After initialising, open the repo settings and mark it as a **template** so it can be used for assignments.
-3. Add the exercise on the `main` branch:
-    - Put the starter in `exercise/` (e.g. `exercise/calculator.js`). **Export** every function the tests import, so the grader can reach them.
-    - Put the unit tests in `tests/` (e.g. `tests/calculator.test.ts`), importing from `../exercise/<file>`.
-    - Replace this README with the exercise brief for students.
-4. Create a `solutions` branch and commit a reference solution to it (the renamed `.ts`, fully typed, bugs fixed). Confirm `npm test` is green against it.
-5. Push all branches.
+1. Open a terminal in the `exercise/` folder.
+2. Rename the starter: `mv progress.js progress.ts`.
+3. Work through what the compiler surfaces.
+4. Compile with a bare `npx tsc`. Not `npx tsc progress.ts`: with a filename argument, `tsc` ignores `tsconfig.json` and the strict settings with it.
+5. Run the output: `node progress.js`.
 
-## Testing (Classroom assignment settings)
+## Your task
 
-Create a new Classroom assignment using the exercise repo as the starter template, with:
+This is the last TypeScript exercise of the module and it pulls together sessions 1 to 4. The file contains skeleton functions and a test block. All of them are untyped, and a couple contain runtime bugs that only become obvious once types are applied. Run the starter and compare its output against the data; two things are quietly wrong.
 
-- **Repository visibility:** Private
-- **Grant students admin access to their repository:** Disabled
-- **Copy the default branch only:** Enabled (keeps the `solutions` branch private)
-- **Supported editor:** Don't use an online IDE
-- **Protected file paths:** `.github/**/*`, `**/tests/**/*` — so students cannot edit the workflows or the autograding tests
-- **Enable feedback pull requests:** Enabled
+1. Rename `progress.js` to `progress.ts`.
+2. Model the domain with interfaces and/or type aliases:
+    - a `Learner` with `id`, `name`, and `email`
+    - a `ModuleProgress` with a `title` and a `status`, discriminated on status: `'not-started'`, `'in-progress'`, or `'completed'`. A completed module has a `completedOn: Date`, an in-progress module has a `lastActivity: Date`, and a not-started module has nothing extra.
+    - an `Enrolment` that links a learner to an array of `ModuleProgress`
+3. Implement these functions with correct types:
+    - `completedModules(enrolment: Enrolment): ModuleProgress[]`, returning only completed modules
+    - `progressSummary(enrolment: Enrolment): string`, returning a human-readable summary using a discriminated union switch
+    - `findLearner(enrolments: Enrolment[], id: string): Enrolment | undefined`, using a generic helper if you want
+4. Use `map`, `filter`, or `reduce` at least once.
+5. Do not mutate any input.
+6. Compile with `npx tsc` and run with `node progress.js`.
 
-Then accept the assignment from a test account, commit and push, and review the Actions output and the Feedback PR comment to confirm everything works.
+Keep the exported function names (`completedModules`, `progressSummary`, `findLearner`) — the autograder imports them by name.
 
-## How grading works
+## Stretch goals
 
-- **Functionality** comes from the Vitest suite: the reusable workflow runs `npm ci && npm test`, parses `test-results/junit.xml`, and scales the pass rate to 5 points.
-- **Code quality** comes from the automated agent review of the submission, scaled to 5 points.
+- Add an `exhaustive` helper and use it in `progressSummary` so that adding a new module status becomes a compile error.
+- Add a function that takes an `Enrolment` and returns a new `Enrolment` with one module marked as complete, using the four immutable moves from Part 1 of the session.
+- Extract the generic `findById` from session 3 and use it inside `findLearner`.
 
-> Note: for exercises whose only defect is a **type** error (nothing wrong at runtime), Vitest cannot distinguish a finished submission from the starter — the `typecheck.yml` check and the agent review are what catch untyped work. Design at least one **runtime-observable** requirement per exercise where you want the functionality score to reflect real progress.
+## Done when
+
+`npx tsc` completes with no errors, `node progress.js` shows Amara's completed module in the list and a summary with real dates (no `undefined`), no input is mutated, and your work is committed and pushed.
+
+## How your work is graded
+
+Every push runs two GitHub Actions checks:
+
+- **Type check** — runs `npx tsc` on your exercise under the strict settings, once you have renamed the starter to `.ts`.
+- **Autograding** — runs an automated test suite (Vitest) against your functions and reports a functionality score, plus an automated code-quality review.

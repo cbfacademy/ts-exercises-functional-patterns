@@ -14,3 +14,6 @@ test-results/
 # Note for maintainers: do NOT ignore *.js globally. The session starters are
 # .js files that students rename to .ts and then compile back to .js, and both
 # belong in their forks.
+
+# Reference solution staged locally for the solutions branch; never on student main
+.solution/

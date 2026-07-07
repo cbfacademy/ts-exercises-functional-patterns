@@ -1,8 +1,8 @@
 {
-    "name": "ts-exercises-template",
+    "name": "ts-exercises-functional-patterns",
     "version": "1.0.0",
     "private": true,
-    "description": "Template for autograded TypeScript exercise repositories",
+    "description": "Session 4 exercise: Functional patterns and narrowing",
     "scripts": {
         "format": "prettier --write .",
         "lint": "eslint exercise --no-error-on-unmatched-pattern",
