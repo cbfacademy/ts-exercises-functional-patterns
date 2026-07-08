@@ -4,6 +4,7 @@
         "target": "es2022",
         "lib": ["es2022"],
         "module": "commonjs",
-        "noEmitOnError": true
+        "noEmitOnError": true,
+        "types": ["node"]
     }
 }
